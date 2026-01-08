@@ -1,0 +1,79 @@
+# BAS-SUPERGROK .gitignore
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Build Files
+node_modules/
+dist/
+build/
+*.min.js
+*.min.css
+
+# Log Files
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary Files
+*.tmp
+*.temp
+.cache/
+
+# Backup Files
+*.bak
+*.backup
+
+# Environment Files
+.env
+.env.local
+.env.*.local
+
+# Deployment Files
+.deploy/
+.netlify/
+
+# Mac Files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux Files
+*~
+.directory
+
+# IDE Specific
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Project Specific
+config.local.json
+secrets.json
+*.private
