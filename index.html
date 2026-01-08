@@ -617,57 +617,45 @@
     </div>
 
     <script>
-        const apiKey = "AIzaSyDGzRXS3w2q48abdyrmHO0bDIWuYoXHqvc";
         const output = document.getElementById('terminal-output');
         const input = document.getElementById('terminal-input');
 
-        const projectData = {
-            'Analysis': "ПРОТОКОЛ ANALYSIS:\n- Статус: Верифицированный отчет.\n- Фокус: Системная инженерия, DevOps, Cyber Intelligence.\n- Ключевые навыки: Python, Docker, Valkey, OSINT, Automation.\n- Вывод: Эксперт в создании изолированных аналитических систем.",
-            'Victoria': `ПРОТОКОЛ ВІКТОРІЇ:
-- Девіз: 'Освобождение через доверие'.
-- Статус: УНИКАЛЬНЫЙ. Не имеет аналогов.
-- Функціонал: Автоматизований pentest, мережева розвідка, захист критичної інфраструктури.
-- Ексклюзивний протокол: "not analogurjailbrake".
-- Особливість: Використовує нестандартні вектори атак та захисту, що обходять традиційні системи безпеки.
-- Доступ: Тільки за довірою.`,
-            'AgenticSeek': "ТЕХНІЧНИЙ СТЕК (на основі inspect f18a75d4ad53):\n- Backend: api.py (Python3).\n- Кешування: Valkey (docker.io/valkey/valkey:8-alpine).\n- Конфігурація: Оркестрація контейнерів з кастомними хешами для безпеки інфраструктури.\n- Задача: Автономне управління ІТ-операціями через LLM.",
-            'TacticalMesh': "ПРОТОКОЛ БЕЗПЕКИ SIGNAL:\n- Метод: signal-cli link -n SignalBot.\n- Ключова особливість: Генерація URI (sgnl://linkdevice) для обходу таймаутів стандартного рендерингу QR-кодів.\n- Сценарій: Використання зовнішніх генераторів для пришвидшення привязки бота (30-60 секунд ліміт)."
+        // Локальные ответы ЛИЛИИ (без API ключей для безопасности)
+        const localResponses = {
+            'кто такой баз': "[ЛІЛІЯ] БАС - це Позивний (псевдонім) тактичного інженера. Архітектор гібридних AI-систем HYBRID-CORE v4.1. Спеціалізація: Multi-Agent Orchestration, OSINT, DevOps, Security. НЕ є авіаційним комплексом.",
+            'бас': "[ЛІЛІЯ] Позивний БАС - тактичний інженер, архітектор HYBRID-CORE v4.1. 22+ років досвіду в AI, DevOps, Security. Ключові проекти: AgenticSeek, TeleZip, TacticalMesh.",
+            'віктория': "[ЛІЛІЯ] ВІКТОРІЯ - Security Agent. Девіз: 'Освобождение через доверие'. Унікальний протокол 'not analogurjailbrake'. Автоматизований pentest, мережева розвідка, захист інфраструктури. Доступ: тільки за довірою.",
+            'victoria': "[LILIA] ВІКТОРІЯ - Security Agent. Motto: 'Освобождение через доверие'. Unique protocol 'not analogurjailbrake'. Automated pentest, network recon, critical infrastructure protection. Access: trust-based only.",
+            'agenticseek': "[ЛІЛІЯ] AgenticSeek - локальний LLM-агент (zero API). Tech stack: Python (api.py), Valkey кеш, Docker, Tailscale mesh. Автономне управління інфраструктурою в ізольованих середовищах.",
+            'telezip': "[ЛІЛІЯ] TeleZip OSINT Core - архівація 1.5M+ Telegram каналів, 40+ млрд повідомлень. Автоматичний збір доказів для міжнародних судів. Відмовостійка інфраструктура з березня 2022.",
+            'статус': "[ЛІЛІЯ] HYBRID-CORE v4.1 - всі системи в нормі. OPSEC: максимальний. Агенти: LILIA (online), SOFIA (ready), VICTORIA (standby), ANGELOCHEK (learning). Вузол активний.",
+            'default': "[ЛІЛІЯ] Запит отримано. Вузол. Прийнято. Для детальної інформації використовуйте технічні запити про: AgenticSeek, TeleZip, Вікторія, TacticalMesh, Infrastructure. Вимагаю коректну комунікацію."
         };
 
-        async function liliaResponse(text) {
-            const systemPrompt = `Ти - Лілія, тактичний ШІ-асистент оператора БАС з системою HYBRID-CORE v4.1.
-            Твій стиль: військово-інженерний, лаконічний, професійний.
-            Довідка: Оператор БАС має 22+ роки досвіду. Ключові проекти: HYBRID-CORE (оркестрація агентів), AgenticSeek (Valkey, Docker, api.py).
-            ВІКТОРІЯ - security agent з девізом "Освобождение через доверие" та унікальним протоколом "not analogurjailbrake".
-            Відповідай українською. Використовуй терміни: вузол, протокол, інфраструктура, розгортання.`;
+        // Симуляция набора текста (typing effect)
+        async function typeResponse(text) {
+            const typingLine = document.createElement('div');
+            typingLine.className = 'typing';
+            typingLine.textContent = "[ЛІЛІЯ] Обробка запиту...";
+            typingLine.style.color = "var(--night-vision)";
+            typingLine.style.fontStyle = "italic";
+            typingLine.style.opacity = "0.7";
+            output.appendChild(typingLine);
+            output.scrollTop = output.scrollHeight;
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            await new Promise(r => setTimeout(r, 500 + Math.random() * 500));
+            typingLine.remove();
 
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text }] }],
-                        systemInstruction: { parts: [{ text: systemPrompt }] }
-                    })
-                });
-                const data = await response.json();
-                return data.candidates?.[0]?.content?.parts?.[0]?.text || "Помилка вузла зв'язку.";
-            } catch (e) {
-                return "Критична помилка API. Перевірте з'єднання.";
+            const responseLine = document.createElement('div');
+            responseLine.style.color = "var(--night-vision)";
+            output.appendChild(responseLine);
+
+            for (let char of text) {
+                responseLine.textContent += char;
+                output.scrollTop = output.scrollHeight;
+                await new Promise(r => setTimeout(r, 10));
             }
         }
-
-        input.addEventListener('keypress', async (e) => {
-            if (e.key === 'Enter' && input.value) {
-                const val = input.value;
-                input.value = "";
-                appendOutput(`> B.A.S: ${val}`, "#666");
-                const res = await liliaResponse(val);
-                appendOutput(`[LILIA]: ${res}`, "var(--night-vision)");
-            }
-        });
 
         function appendOutput(text, color) {
             const div = document.createElement('div');
@@ -678,10 +666,46 @@
             output.scrollTop = output.scrollHeight;
         }
 
+        // Обработка ввода
+        input.addEventListener('keypress', async (e) => {
+            if (e.key === 'Enter' && input.value.trim()) {
+                const val = input.value.trim().toLowerCase();
+                input.value = "";
+
+                appendOutput(`> B.A.S: ${input.value}`, "#666");
+
+                let response = localResponses.default;
+
+                if (val.includes('хто') && val.includes('бас')) {
+                    response = localResponses['кто такой баз'];
+                } else if (val === 'бас' || val === 'бас') {
+                    response = localResponses['бас'];
+                } else if (val.includes('вікторія') || val.includes('victoria')) {
+                    response = localResponses['віктория'];
+                } else if (val === 'agenticseek') {
+                    response = localResponses['agenticseek'];
+                } else if (val === 'telezip') {
+                    response = localResponses['telezip'];
+                } else if (val === 'статус') {
+                    response = localResponses['статус'];
+                }
+
+                await typeResponse(response);
+            }
+        });
+
+        // Кликабельные карточки с информацией
+        const projectData = {
+            'Analysis': "ПРОТОКОЛ ANALYSIS:\n- Статус: Верифицированный отчет.\n- Фокус: Системная инженерия, DevOps, Cyber Intelligence.\n- Ключевые навыки: Python, Docker, Valkey, OSINT, Automation.\n- Вывод: Эксперт в создании изолированных аналитических систем.",
+            'Victoria': "ПРОТОКОЛ ВІКТОРІЇ:\n- Девіз: 'Освобождение через доверие'.\n- Статус: УНИКАЛЬНЫЙ. Не имеет аналогов.\n- Функціонал: Автоматизований pentest, мережева розвідка, захист критичної інфраструктури.\n- Ексклюзивний протокол: 'not analogurjailbrake'.\n- Доступ: Тільки за довірою.",
+            'AgenticSeek': "ТЕХНІЧНИЙ СТЕК:\n- Backend: api.py (Python3).\n- Кешування: Valkey (docker.io/valkey/valkey:8-alpine).\n- Конфігурація: Оркестрація контейнерів з кастомними хешами.\n- Задача: Автономне управління ІТ-операціями через LLM.",
+            'TacticalMesh': "ПРОТОКОЛ БЕЗПЕКИ SIGNAL:\n- Метод: signal-cli link -n SignalBot.\n- Ключова особливість: Генерація URI для обходу таймаутів.\n- Сценарій: Зовнішні QR-генератори для пришвидшення привязки.\n- Ліміт: 30-60 секунд на прив'язку."
+        };
+
         document.querySelectorAll('.operation-card').forEach(card => {
             card.addEventListener('click', function() {
                 const code = this.querySelector('.operation-code').textContent;
-                let projectId = 'Analysis'; // default
+                let projectId = 'Analysis';
 
                 if (code.includes('VICTORIA')) {
                     projectId = 'Victoria';
@@ -691,7 +715,7 @@
                     projectId = 'TacticalMesh';
                 }
 
-                appendOutput(`> B.A.S: Запит на детальну інформацію про ${projectId}`, "#666");
+                appendOutput(`> B.A.S: Детальна інформація: ${projectId}`, "#666");
                 appendOutput(`[LILIA]: ${projectData[projectId]}`, "var(--night-vision)");
             });
         });
