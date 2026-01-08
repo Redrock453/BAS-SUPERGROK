@@ -3,544 +3,425 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="БАС - SUPERGROK TACTICAL SYSTEMS ARCHITECT - Innovative AI-powered tactical systems for modern defense">
-    <meta name="keywords" content="AI, tactical systems, defense, Ukraine, military technology, mesh networks, autonomous systems">
-    <meta name="author" content="Redrock453">
-    <title>БАС - SUPERGROK TACTICAL SYSTEMS ARCHITECT</title>
-
+    <title>ПОЗИВНИЙ БАС | HYBRID TACTICAL CORE v4.1</title>
+    <meta name="description" content="Тактичний архітектор гібридних систем | OSINT | AI Autonomy | Україна">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap');
+        :root {
+            --camo-dark: #050805;
+            --camo-green: #1b261b;
+            --tactical-gold: #b3924d;
+            --night-vision: #00ff41;
+            --warn-red: #cc0000;
+            --hud-grid: rgba(0, 255, 65, 0.08);
         }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Courier New', monospace;
-            background: #0a0a0a;
-            color: #00ff00;
-            line-height: 1.6;
+            background-color: var(--camo-dark);
+            color: #e0e0e0;
+            font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
+            position: relative;
+            background-image:
+                radial-gradient(circle at 20% 50%, transparent 20%, var(--camo-green) 21%, transparent 21%),
+                radial-gradient(circle at 60% 30%, transparent 25%, var(--camo-green) 26%, transparent 26%),
+                linear-gradient(var(--hud-grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--hud-grid) 1px, transparent 1px);
+            background-size: cover, cover, 50px 50px, 50px 50px;
+            cursor: crosshair;
         }
-
+        .scanline {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 255, 65, 0.03) 51%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 9999;
+            animation: scan 9s linear infinite;
+        }
+        @keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+        .corner-emblem {
+            position: fixed;
+            width: 80px;
+            height: 80px;
+            z-index: 1000;
+            opacity: 0.85;
+            filter: drop-shadow(0 0 12px var(--night-vision));
+        }
+        .corner-emblem img { width: 100%; height: 100%; object-fit: contain; }
+        .top-left { top: 15px; left: 15px; }
+        .top-right { top: 15px; right: 15px; }
         .container {
+            position: relative;
+            z-index: 10;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Terminal Header */
-        .terminal-header {
-            background: #1a1a1a;
-            border: 2px solid #00ff00;
-            border-radius: 10px 10px 0 0;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .terminal-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #00ff00;
-        }
-
-        .terminal-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .terminal-btn {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .btn-red { background: #ff5f56; }
-        .btn-yellow { background: #ffbd2e; }
-        .btn-green { background: #27c93f; }
-
-        /* Main Content */
-        .terminal-body {
-            background: #0d0d0d;
-            border: 2px solid #00ff00;
-            border-top: none;
-            border-radius: 0 0 10px 10px;
             padding: 30px;
-            min-height: 600px;
         }
-
         .hero {
+            background: linear-gradient(135deg, rgba(10,18,10,0.95), rgba(20,35,20,0.95));
+            border: 3px solid var(--tactical-gold);
+            padding: 80px 40px;
             text-align: center;
-            padding: 40px 0;
-            border-bottom: 1px solid #00ff00;
-            margin-bottom: 40px;
+            position: relative;
+            clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 5% 100%, 0 95%);
+            box-shadow: 0 0 40px rgba(0,255,65,0.25);
+            margin-bottom: 60px;
         }
-
-        .hero h1 {
-            font-size: 48px;
+        .hero::before {
+            content: '[ HYBRID CORE v4.1 // OPSEC MAX ]';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-family: 'Orbitron', monospace;
+            color: var(--warn-red);
+            font-size: 0.9em;
+            letter-spacing: 3px;
+            animation: blink 1.8s infinite;
+        }
+        @keyframes blink { 0%,50%,100% { opacity: 1; } 25%,75% { opacity: 0.3; } }
+        .rank {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.3em;
+            color: var(--tactical-gold);
+            letter-spacing: 6px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 900;
+            color: var(--tactical-gold);
+            text-transform: uppercase;
+            letter-spacing: 12px;
+            text-shadow: 0 0 25px rgba(179,146,77,0.7);
             margin-bottom: 20px;
-            text-shadow: 0 0 10px #00ff00;
-            animation: glow 2s ease-in-out infinite alternate;
         }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 10px #00ff00; }
-            to { text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00; }
-        }
-
-        .hero p {
-            font-size: 20px;
-            color: #00cc00;
+        .callsign {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.7em;
+            color: var(--night-vision);
+            letter-spacing: 5px;
+            text-shadow: 0 0 18px var(--night-vision);
             margin-bottom: 30px;
         }
-
-        .version {
-            display: inline-block;
-            background: #00ff00;
+        .terminal-container {
+            border: 2px solid var(--night-vision);
+            background: rgba(0, 0, 0, 0.95);
+            height: 420px;
+            display: flex;
+            flex-direction: column;
+            margin: 60px auto;
+            max-width: 1000px;
+            box-shadow: 0 0 30px rgba(0,255,65,0.3);
+        }
+        .terminal-header {
+            background: var(--night-vision);
             color: #000;
             padding: 8px 20px;
-            border-radius: 5px;
             font-weight: bold;
-            margin-top: 20px;
-        }
-
-        /* AI Agents Section */
-        .agents-section {
-            margin: 50px 0;
-        }
-
-        .section-title {
-            font-size: 32px;
-            margin-bottom: 30px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #00ff00;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .agents-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .agent-card {
-            background: #1a1a1a;
-            border: 1px solid #00ff00;
-            border-radius: 10px;
-            padding: 25px;
-            transition: all 0.3s ease;
-        }
-
-        .agent-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0, 255, 0, 0.3);
-        }
-
-        .agent-name {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #00ff00;
-        }
-
-        .agent-role {
-            color: #00cc00;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-
-        .agent-description {
-            color: #00aa00;
-            line-height: 1.6;
-        }
-
-        /* Operations Section */
-        .operations-section {
-            margin: 50px 0;
-        }
-
-        .operation-item {
-            background: #0f0f0f;
-            border-left: 4px solid #00ff00;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .operation-item:hover {
-            background: #1a1a1a;
-            border-left-width: 8px;
-        }
-
-        .operation-name {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #00ff00;
-        }
-
-        .operation-stats {
             display: flex;
-            gap: 30px;
-            margin-top: 15px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            font-size: 1rem;
+            font-family: 'Orbitron';
         }
-
-        .stat {
-            background: #1a1a1a;
-            padding: 10px 20px;
-            border-radius: 5px;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #00ff00;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #00aa00;
-            text-transform: uppercase;
-        }
-
-        /* Terminal Output */
-        .terminal-output {
-            background: #000;
-            border: 1px solid #00ff00;
-            border-radius: 5px;
+        #terminal-output {
+            flex-grow: 1;
             padding: 20px;
-            margin: 30px 0;
-            max-height: 300px;
             overflow-y: auto;
+            font-size: 0.95rem;
+            color: var(--night-vision);
+            font-family: 'Share Tech Mono';
         }
-
-        .terminal-line {
-            margin-bottom: 10px;
-            color: #00ff00;
+        .terminal-input-wrap {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(0, 255, 65, 0.4);
+            display: flex;
+            background: rgba(0,0,0,0.7);
         }
-
-        .terminal-line::before {
-            content: "$ ";
-            color: #00ff00;
+        #terminal-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            flex-grow: 1;
+            font-family: inherit;
+            outline: none;
+            font-size: 1rem;
+            margin-left: 15px;
         }
-
-        .terminal-line.success {
-            color: #00cc00;
+        .typing {
+            opacity: 0.7;
+            font-style: italic;
         }
-
-        .terminal-line.warning {
-            color: #ffbd2e;
-        }
-
-        .terminal-line.error {
-            color: #ff5f56;
-        }
-
-        /* Contact Section */
-        .contact-section {
-            margin: 50px 0;
-            padding: 30px;
-            background: #1a1a1a;
-            border: 1px solid #00ff00;
-            border-radius: 10px;
-        }
-
-        .contact-info {
+        .intel-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
         }
-
-        .contact-item {
-            padding: 15px;
-            background: #0f0f0f;
-            border-radius: 5px;
+        .intel-card {
+            background: linear-gradient(135deg, rgba(20, 30, 20, 0.9), rgba(10, 15, 10, 0.9));
+            border: 1px solid var(--tactical-gold);
+            padding: 30px;
+            position: relative;
+            transition: 0.4s;
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
         }
-
-        .contact-label {
-            color: #00aa00;
-            font-size: 12px;
-            text-transform: uppercase;
-            margin-bottom: 5px;
+        .intel-card:hover {
+            border-color: var(--night-vision);
+            box-shadow: 0 0 25px rgba(0,255,65,0.4);
+            transform: translateY(-8px);
         }
-
-        .contact-value {
-            color: #00ff00;
-            font-size: 16px;
-            word-break: break-all;
-        }
-
-        /* Footer */
-        .footer {
-            margin-top: 50px;
-            padding: 20px;
+        .victoria-motto {
+            font-style: italic;
+            color: var(--warn-red);
             text-align: center;
-            border-top: 1px solid #00ff00;
-            color: #00aa00;
+            margin: 15px 0;
+            font-size: 1.1em;
+            text-shadow: 0 0 10px var(--warn-red);
+            animation: pulse 3s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
+        .card-title { color: var(--tactical-gold); font-family: 'Orbitron'; font-size: 1.4rem; letter-spacing: 3px; margin-bottom: 15px; }
+        .card-desc { font-size: 0.95rem; color: #ccc; line-height: 1.7; margin-bottom: 25px; }
+        .tech-tag {
+            font-size: 0.75rem;
+            background: rgba(179, 146, 77, 0.15);
+            color: var(--tactical-gold);
+            padding: 5px 12px;
+            border: 1px solid var(--tactical-gold);
+            margin: 4px;
+            display: inline-block;
+            text-transform: uppercase;
+            font-family: 'Share Tech Mono';
+        }
+        footer {
+            margin-top: 80px;
+            text-align: center;
+            padding: 50px;
+            border-top: 3px solid var(--tactical-gold);
+            background: rgba(0,0,0,0.6);
+        }
+        .security-notice {
+            background: rgba(139,0,0,0.2);
+            border: 2px solid var(--warn-red);
+            padding: 30px;
+            color: var(--warn-red);
+            max-width: 900px;
+            margin: 40px auto 0;
+            font-family: 'Orbitron';
+            letter-spacing: 2px;
+            font-size: 1.1em;
         }
 
-        .blink {
-            animation: blinker 1s linear infinite;
-        }
-
-        @keyframes blinker {
-            50% { opacity: 0; }
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 32px;
+            .hero {
+                padding: 40px 20px;
             }
-
-            .agents-grid {
+            .terminal-container {
+                height: 350px;
+                margin: 40px 20px;
+            }
+            .intel-grid {
                 grid-template-columns: 1fr;
             }
-
-            .operation-stats {
-                flex-direction: column;
-                gap: 10px;
+            .corner-emblem {
+                width: 50px;
+                height: 50px;
             }
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0a0a0a;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00ff00;
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00cc00;
-        }
-
-        .status-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .status-online {
-            background: #27c93f;
-            box-shadow: 0 0 10px #27c93f;
-        }
-
-        .status-offline {
-            background: #ff5f56;
+            .top-left { top: 10px; left: 10px; }
+            .top-right { top: 10px; right: 10px; }
         }
     </style>
 </head>
 <body>
+    <div class="scanline"></div>
+    <div class="corner-emblem top-left">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e5/Emblem_of_the_Ukrainian_Armed_Forces.svg" alt="ЗСУ">
+    </div>
+    <div class="corner-emblem top-right">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Flag_of_Ukraine.svg" alt="Прапор України">
+    </div>
     <div class="container">
-        <!-- Terminal Header -->
-        <div class="terminal-header">
-            <div class="terminal-title">
-                <span class="status-indicator status-online blink"></span>
-                LILIA AI v3.5 - Tactical Systems Architect
+        <header class="hero">
+            <div class="rank">⭐ СТАРШИЙ ТАКТИЧНИЙ АРХІТЕКТОР ⭐</div>
+            <h1>ПОЗИВНИЙ БАС</h1>
+            <div class="callsign">▲ HYBRID TACTICAL SYSTEMS ENGINEER v4.1 ▲</div>
+            <p style="font-size:1.3em; color:#aaa; letter-spacing:2px; max-width:900px; margin:0 auto 40px;">
+                AI Multi-Agent Orchestration • Data Resilience • OSINT Warfare • Secure Comms • Україна
+            </p>
+        </header>
+
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <span><span style="color:red; animation: pulse 1.5s infinite;">●</span> ЛІЛІЯ_AI v4.1 // MISSION_INTELLIGENCE</span>
+                <span>SYS_ONLINE</span>
             </div>
-            <div class="terminal-buttons">
-                <span class="terminal-btn btn-red"></span>
-                <span class="terminal-btn btn-yellow"></span>
-                <span class="terminal-btn btn-green"></span>
+            <div id="terminal-output">
+                <div>> [ЛІЛІЯ] Система гібридного ядра v4.1 ініціалізовано.</div>
+                <div>> [ЛІЛІЯ] Зв'язок захищений AES-256-GCM. Геолокація прихована.</div>
+                <div>> [ЛІЛІЯ] Готова до тактичних запитів: TeleZip, AgenticSeek, SignalBot, ВІКТОРІЯ...</div>
+                <div>> [ЛІЛІЯ] Введіть запит для розвідки.</div>
+            </div>
+            <div class="terminal-input-wrap">
+                <span style="color: var(--night-vision);">[B.A.S@SECURE-CORE]:~#</span>
+                <input type="text" id="terminal-input" placeholder="Запит до ЛІЛІЇ..." autocomplete="off">
             </div>
         </div>
 
-        <!-- Terminal Body -->
-        <div class="terminal-body">
-            <!-- Hero Section -->
-            <div class="hero">
-                <h1>БАС - SUPERGROK</h1>
-                <h2>TACTICAL SYSTEMS ARCHITECT</h2>
-                <p>Innovative AI-Powered Tactical Solutions for Modern Defense</p>
-                <div class="version">v3.5.0 - Production Ready</div>
-            </div>
-
-            <!-- Terminal Output -->
-            <div class="terminal-output">
-                <div class="terminal-line">Initializing LILIA AI v3.5...</div>
-                <div class="terminal-line success">✓ All systems operational</div>
-                <div class="terminal-line">Loading tactical modules...</div>
-                <div class="terminal-line success">✓ Mesh network protocols loaded</div>
-                <div class="terminal-line success">✓ AI agents synchronized</div>
-                <div class="terminal-line success">✓ Communication channels established</div>
-                <div class="terminal-line warning">> System ready for deployment</div>
-            </div>
-
-            <!-- AI Agents Section -->
-            <div class="agents-section">
-                <h2 class="section-title">🤖 AI AGENTS</h2>
-                <div class="agents-grid">
-                    <div class="agent-card">
-                        <div class="agent-name">🎯 LILIA</div>
-                        <div class="agent-role">Orchestrator Agent (Gemini)</div>
-                        <div class="agent-description">
-                            Master coordination system managing all tactical operations.
-                            Real-time decision making with adaptive learning capabilities.
-                        </div>
-                    </div>
-
-                    <div class="agent-card">
-                        <div class="agent-name">⚡ SOFIA</div>
-                        <div class="agent-role">Operations Agent</div>
-                        <div class="agent-description">
-                            Front-line tactical operations specialist.
-                            Handles autonomous task execution and field operations.
-                        </div>
-                    </div>
-
-                    <div class="agent-card">
-                        <div class="agent-name">🛡️ VICTORIA</div>
-                        <div class="agent-role">Security Agent</div>
-                        <div class="agent-description">
-                            Cybersecurity and electronic warfare specialist.
-                            Protects systems from intrusion and coordinates defensive measures.
-                        </div>
-                    </div>
-
-                    <div class="agent-card">
-                        <div class="agent-name">🧠 ANGELOCHEK</div>
-                        <div class="agent-role">Learning Agent</div>
-                        <div class="agent-description">
-                            Machine learning specialist focused on continuous improvement.
-                            Analyzes data patterns to optimize system performance.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Operations Section -->
-            <div class="operations-section">
-                <h2 class="section-title">🚀 ACTIVE OPERATIONS</h2>
-
-                <div class="operation-item">
-                    <div class="operation-name">📡 TeleZip</div>
-                    <p>High-throughput tactical communication network with real-time compression</p>
-                    <div class="operation-stats">
-                        <div class="stat">
-                            <div class="stat-value">1.5M+</div>
-                            <div class="stat-label">Channels</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">40B+</div>
-                            <div class="stat-label">Messages</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">&lt;50ms</div>
-                            <div class="stat-label">Latency</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="operation-item">
-                    <div class="operation-name">🔍 AgenticSeek</div>
-                    <p>Intelligent search and reconnaissance system with AI-powered analysis</p>
-                    <div class="operation-stats">
-                        <div class="stat">
-                            <div class="stat-value">99.9%</div>
-                            <div class="stat-label">Accuracy</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">24/7</div>
-                            <div class="stat-label">Monitoring</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="operation-item">
-                    <div class="operation-name">🌐 Tactical Comms Mesh</div>
-                    <p>Decentralized mesh network for battlefield communication</p>
-                    <div class="operation-stats">
-                        <div class="stat">
-                            <div class="stat-value">50+</div>
-                            <div class="stat-label">Nodes</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">10km</div>
-                            <div class="stat-label">Range</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">AES-256</div>
-                            <div class="stat-label">Encryption</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Contact Section -->
-            <div class="contact-section">
-                <h2 class="section-title">📞 CONTACT</h2>
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-label">Email</div>
-                        <div class="contact-value">[REDACTED]</div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-label">Email</div>
-                        <div class="contact-value">[REDACTED]</div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-label">GitHub</div>
-                        <div class="contact-value">@Redrock453</div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-label">Location</div>
-                        <div class="contact-value"> [REDACTED]область, Україна</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="footer">
-                <p>© 2026 БАС - SUPERGROK TACTICAL SYSTEMS ARCHITECT</p>
-                <p>Demo/Portfolio Project • Not for Combat Use</p>
-                <p>
-                    <span class="blink">▌</span>
-                    System Status: <span style="color: #27c93f;">ONLINE</span>
+        <div class="intel-grid">
+            <div class="intel-card">
+                <h3 class="card-title">📡 TeleZip OSINT Core</h3>
+                <p class="card-desc">
+                    Глобальна архівація ворожого сегменту Telegram: 40+ млрд повідомлень, 1.5M+ каналів.<br>
+                    Автоматичний збір доказів для міжнародних судів. Відмовостійка інфраструктура з березня 2022.
                 </p>
+                <div>
+                    <span class="tech-tag">Elasticsearch</span>
+                    <span class="tech-tag">BigData</span>
+                    <span class="tech-tag">Evidence</span>
+                    <span class="tech-tag">OSINT</span>
+                </div>
+            </div>
+            <div class="intel-card">
+                <h3 class="card-title">🧠 AgenticSeek Autonomy</h3>
+                <p class="card-desc">
+                    Повністю локальні LLM-агенти. Zero API costs. Valkey кеш, Docker оркестрація, api.py backend.<br>
+                    Автономне управління інфраструктурою в ізольованих умовах.
+                </p>
+                <div>
+                    <span class="tech-tag">Local LLM</span>
+                    <span class="tech-tag">Valkey</span>
+                    <span class="tech-tag">Docker</span>
+                    <span class="tech-tag">Zero Trust</span>
+                </div>
+            </div>
+            <div class="intel-card">
+                <h3 class="card-title">⚡ Tactical SignalBot Mesh</h3>
+                <p class="card-desc">
+                    Безпечна прив'язка Signal-пристроїв через URI та зовнішні QR. Обхід таймаутів.<br>
+                    Робота в закритих мережах, автоматизація сповіщень.
+                </p>
+                <div>
+                    <span class="tech-tag">Signal-cli</span>
+                    <span class="tech-tag">Secure Link</span>
+                    <span class="tech-tag">Encryption</span>
+                    <span class="tech-tag">Mesh</span>
+                </div>
+            </div>
+            <div class="intel-card">
+                <div class="victoria-motto">ОСВОБОЖДЕНИЕ ЧЕРЕЗ ДОВЕРИЕ</div>
+                <h3 class="card-title">🛡️ ВІКТОРІЯ // Security Agent</h3>
+                <p class="card-desc">
+                    Bash-powered security unit. Автоматизований pentest, мережева розвідка, захист критичних вузлів.<br>
+                    Core directive: тільки повна довіра до системи дає справжнє звільнення від загроз.
+                </p>
+                <div>
+                    <span class="tech-tag">Bash</span>
+                    <span class="tech-tag">Pentest</span>
+                    <span class="tech-tag">Trust Protocol</span>
+                    <span class="tech-tag">Liberty</span>
+                </div>
             </div>
         </div>
+
+        <footer>
+            <h2 style="font-family: 'Orbitron'; color: var(--tactical-gold); font-size: 2em; letter-spacing: 5px; margin-bottom: 30px;">
+                [ ЗАХИЩЕНИЙ КАНАЛ ЗВ'ЯЗКУ ]
+            </h2>
+            <div style="font-size:1.3em; color:var(--night-vision); line-height:2.2;">
+                📧 <a href="mailto:[REDACTED]" style="color:var(--night-vision); text-decoration:none;">[REDACTED]</a><br>
+                📧 <a href="mailto:[REDACTED]" style="color:var(--night-vision); text-decoration:none;">[REDACTED]</a><br>
+                🌐 GITHUB: <a href="https://github.com/Redrock453" target="_blank" style="color:var(--night-vision); text-decoration:none;">@Redrock453</a><br>
+                🔒 PGP & SIGNAL: ЗА ЗАПИТОМ (ДОВІРЕНИЙ ЗВ'ЯЗОК)
+            </div>
+            <div class="security-notice">
+                ⚠️ ВУЗОЛ ЗАХИЩЕНИЙ ВИСОКИМ РІВНЕМ OPSEC ⚠️<br>
+                ВСІ З'ЄДНАННЯ ШИФРУЮТЬСЯ | МОНИТОРИНГ АКТИВНИЙ | ДОСТУП ТІЛЬКИ ПІСЛЯ ВЕРИФІКАЦІЇ<br>
+                СЛАВА УКРАЇНІ 🇺🇦
+            </div>
+        </footer>
     </div>
 
     <script>
-        // Terminal typing effect
-        const terminalLines = document.querySelectorAll('.terminal-line');
-        terminalLines.forEach((line, index) => {
-            line.style.opacity = '0';
-            setTimeout(() => {
-                line.style.transition = 'opacity 0.3s ease';
-                line.style.opacity = '1';
-            }, index * 200);
+        const output = document.getElementById('terminal-output');
+        const input = document.getElementById('terminal-input');
+
+        // Безпечне додавання тексту (захист від XSS)
+        function appendLine(text, color = "var(--night-vision)", className = "") {
+            const div = document.createElement('div');
+            div.style.color = color;
+            div.style.marginBottom = "12px";
+            if (className) div.className = className;
+            div.innerHTML = text.replace(/\n/g, '<br>');
+            output.appendChild(div);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Ефект друку тексту
+        async function typeResponse(text) {
+            const typingLine = document.createElement('div');
+            typingLine.className = 'typing';
+            typingLine.textContent = "[ЛІЛІЯ] Обробка запиту...";
+            output.appendChild(typingLine);
+            output.scrollTop = output.scrollHeight;
+
+            // Симуляція затримки
+            await new Promise(r => setTimeout(r, 800 + Math.random() * 1000));
+
+            typingLine.remove();
+
+            // Друк відповіді по символах
+            const responseLine = document.createElement('div');
+            responseLine.style.color = "var(--night-vision)";
+            output.appendChild(responseLine);
+
+            for (let char of text) {
+                responseLine.textContent += char;
+                output.scrollTop = output.scrollHeight;
+                await new Promise(r => setTimeout(r, 15));
+            }
+        }
+
+        // Локальні відповіді ЛІЛІЇ (можна розширити)
+        const responses = {
+            "привіт": "[ЛІЛІЯ] Вітаю, командире. Система готова до виконання тактичних завдань.",
+            "статус": "[ЛІЛІЯ] Усі вузли в нормі. OPSEC: максимальний. TeleZip: 40+ млрд записів. AgenticSeek: автономний режим активний.",
+            "вікторія": "[ЛІЛІЯ] ВІКТОРІЯ онлайн. Довіра — ключ до звільнення. Протокол довіри активовано.",
+            "telezip": "[ЛІЛІЯ] TeleZip OSINT Core: архівовано 1.5M+ каналів. Доказова база для трибуналів — актуальна.",
+            "agenticseek": "[ЛІЛІЯ] AgenticSeek v2: локальні LLM-агенти, нульові API-залежності. Valkey кеш активний. Готовий до розгортання в ізольованому середовищі.",
+            "сигнал": "[ЛІЛІЯ] SignalBot Mesh: захищені вузли зв'язку активні. Обхід таймаутів — успішний. Мережа стійка.",
+            "default": "[ЛІЛІЯ] Запит отримано. Для активації повного режиму потрібен довірений канал зв'язку (PGP/Signal). Або уточніть завдання."
+        };
+
+        input.addEventListener('keypress', async (e) => {
+            if (e.key === 'Enter' && input.value.trim()) {
+                const query = input.value.trim().toLowerCase();
+                input.value = "";
+
+                appendLine(`> B.A.S: ${query}`, "#888");
+
+                let response;
+                if (responses[query]) {
+                    response = responses[query];
+                } else if (query.includes("вікторія") || query.includes("victoria")) {
+                    response = responses["вікторія"];
+                } else if (query.includes("telezip")) {
+                    response = responses["telezip"];
+                } else {
+                    response = responses.default;
+                }
+
+                await typeResponse(response);
+            }
         });
 
-        // Real-time clock
-        function updateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleString('uk-UA');
-            console.log('System time:', timeString);
-        }
-        setInterval(updateTime, 1000);
-
-        // Console easter egg
-        console.log('%cБАС - SUPERGROK v3.5', 'color: #00ff00; font-size: 24px; font-weight: bold;');
-        console.log('%cTactical Systems Architect', 'color: #00cc00; font-size: 16px;');
-        console.log('%cDemo/Portfolio Project', 'color: #00aa00; font-size: 12px;');
-        console.log('%cNot for combat use', 'color: #ffbd2e; font-size: 12px;');
+        // Фокус на вводі при кліку по терміналу
+        document.querySelector('.terminal-container').addEventListener('click', () => {
+            input.focus();
+        });
     </script>
 </body>
 </html>
