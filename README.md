@@ -198,13 +198,7 @@ BAS-SUPERGROK/
 
 ## 📞 Contact
 
-**Email:**
-- [REDACTED]
-- [REDACTED]
-
 **GitHub:** [@Redrock453](https://github.com/Redrock453)
-
-**Location:**  [REDACTED]область, Україна
 
 ---
 
