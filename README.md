@@ -1,100 +1,121 @@
-# БАС - SUPERGROK TACTICAL SYSTEMS ARCHITECT
+# 🏴‍☠️ БАС - HYBRID TACTICAL OPERATIONS CENTER
 
-**Version:** 3.5.0
-**Status:** Production Ready
-**Type:** Demo/Portfolio Project
-
----
-
-## 📋 Overview
-
-БАС - SUPERGROK is an innovative AI-powered tactical systems architecture project featuring multi-agent orchestration for modern defense applications. This is a **demonstration/portfolio project** showcasing advanced AI agent coordination and tactical communication systems.
-
-**⚠️ IMPORTANT:** This is a demo/portfolio project and is **NOT** intended for actual combat use.
+**Версія:** 5.0.0  
+**Статус:** Production Ready  
+**Тип:** Демо/Портфоліо проєкт  
 
 ---
 
-## 🤖 AI Agents
+## 📋 Опис проєкту
 
-### LILIA (Orchestrator)
-- **Model:** Gemini
-- **Role:** Master coordination system
-- **Capabilities:** Real-time decision making, adaptive learning, tactical orchestration
+**БАС (Позивний)** — це демонстраційний портфоліо-проєкт сучасного тактичного системного архітектора, що демонструє можливості AI-оркестрації, DevOps-практик та кібербезпеки.
 
-### SOFIA (Operations)
-- **Role:** Front-line operations specialist
-- **Capabilities:** Autonomous task execution, field operations management
-
-### VICTORIA (Security)
-- **Role:** Cybersecurity and electronic warfare
-- **Capabilities:** System protection, intrusion detection, defensive measures
-
-### ANGELOCHEK (Learning)
-- **Role:** Machine learning specialist
-- **Capabilities:** Pattern analysis, performance optimization, continuous improvement
+> ⚠️ **Важливо:** Це демонстраційний проєкт для портфоліо. Не призначений для реального бойового використання.
 
 ---
 
-## 🚀 Active Operations
+## 🤖 AI Агентська Мережа
 
-### TeleZip
-High-throughput tactical communication network
-- **1.5M+** channels
-- **40B+** messages processed
-- **<50ms** latency
-- Real-time compression
+### LILIA (Оркестратор)
+- **Модель:** Gemini 2.0
+- **Роль:** Головна координаційна система
+- **Можливості:** Прийняття рішень в реальному часі, адаптивне навчання, тактична оркестрація
+- **Статус:** 🟢 ONLINE
 
-### AgenticSeek
-Intelligent search and reconnaissance
-- **99.9%** accuracy rate
-- **24/7** monitoring capability
-- AI-powered analysis
+### SOFIA (Операції)
+- **Роль:** Спеціаліст з фронтових операцій
+- **Можливості:** Автономне виконання задач, управління польовими операціями
+- **Статус:** 🟢 ONLINE
 
-### Tactical Comms Mesh
-Decentralized battlefield communication
-- **50+** node support
-- **10km** range
-- **AES-256** encryption
+### VICTORIA (Безпека)
+- **Роль:** Кібервійна та електронна розвідка
+- **Можливості:** Захист системи, виявлення вторгнень, контрзаходи
+- **Спеціальний протокол:** `not analogurjailbrake`
+- **Статус:** 🔴 ACTIVE (PENTEST IN PROGRESS)
+
+### ANGELOCHEK (Аналітика)
+- **Роль:** Machine Learning спеціаліст
+- **Можливості:** Аналіз патернів, оптимізація продуктивності, постійне вдосконалення
+- **Статус:** 🟡 LEARNING
+
+---
+
+## 🚀 Активні Операції
+
+### 📡 TeleZip OSINT Core
+Високопродуктивна тактична мережа комунікацій
+- **1.5M+** каналів
+- **40B+** оброблених повідомлень
+- **<50ms** затримка
+- Real-time компресія
+- Автоматичний збір доказів для міжнародних судів
+
+### 🔍 AgenticSeek
+Інтелектуальний пошук та розвідка
+- **99.9%** точність
+- **24/7** моніторинг
+- AI-потужний аналіз
+- Zero API (локальний LLM)
+
+### 📱 Tactical Comms Mesh
+Децентралізована бойова комунікація
+- **50+** вузлів підтримки
+- **10km** дальність
+- **AES-256** шифрування
 - Self-healing mesh network
+- Інтеграція з Signal, Telegram, WhatsApp
+
+### 🏗️ Distributed Infrastructure
+Розподілена інфраструктура
+- Terraform + GCP
+- Tailscale VPN mesh
+- PostgreSQL кластери
+- Real-time моніторинг
+- Автоскейлінг під екстремальні навантаження
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Технологічний Стек
 
-- **Frontend:** HTML5, CSS3, JavaScript
-- **AI Models:** Gemini, Custom Agents
-- **Communication:** Mesh networking protocols
-- **Security:** AES-256 encryption
-- **Architecture:** Multi-agent orchestration system
+- **Frontend:** HTML5, CSS3, JavaScript (ES6+)
+- **AI:** Gemini, Custom Agents, Local LLM
+- **Backend:** Python (FastAPI, Flask), Node.js
+- **Кешування:** Valkey (Redis-fork)
+- **Контейнеризація:** Docker, Docker Swarm
+- **Оркестрація:** Kubernetes, Terraform
+- **Мережа:** Tailscale, Mesh networking
+- **Безпека:** AES-256, Zero Trust
+- **Автоматизація:** n8n, GitHub Actions
+- **Бази даних:** PostgreSQL, ClickHouse
 
 ---
 
-## 📁 Project Structure
+## 📁 Структура Проєкту
 
 ```
 BAS-SUPERGROK/
-├── index.html          # Main website (terminal interface)
-├── README.md           # This file
+├── index.html          # Головний сайт (термінальний інтерфейс)
+├── README.md           # Цей файл (українською)
 ├── LICENSE             # Apache 2.0 License
-└── .gitignore          # Git ignore rules
+└── .gitignore          # Git ignore правила
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Швидкий Старт
 
-### Local Deployment
+### Локальне розгортання
 
-1. **Clone repository:**
+1. **Клонування репозиторію:**
    ```bash
    git clone https://github.com/Redrock453/BAS-SUPERGROK.git
    cd BAS-SUPERGROK
    ```
 
-2. **Open website:**
-   Simply open `index.html` in your web browser
+2. **Відкриття сайту:**
+   Просто відкрийте `index.html` у вашому браузері
 
-3. **Or use local server:**
+3. **Або використайте локальний сервер:**
    ```bash
    # Python 3
    python3 -m http.server 8000
@@ -103,30 +124,111 @@ BAS-SUPERGROK/
    npx http-server -p 8000
    ```
 
-4. **Open browser:**
-   Navigate to `http://localhost:8000`
+4. **Відкрийте в браузері:**
+   ```
+   http://localhost:8000
+   ```
 
 ---
 
-## 🌐 Deployment
+## 🎨 Функціональні Можливості
+
+### Термінальний Інтерфейс
+- ✅ Реалістичний terminal-style UI
+- ✅ Анімована імітація вводу тексту (typing effect)
+- ✅ Світіння тексту (glow effects)
+- ✅ Індикатори стану системи
+- ✅ Історія команд (стрілки вгору/вниз)
+- ✅ Автодоповнення (Tab)
+
+### Доступні команди:
+- `help` — Показати всі команди
+- `status` — Стан системи
+- `agents` — Список AI-агентів
+- `scan` — Сканування мережі
+- `ops` — Активні операції
+- `clear` — Очистити термінал
+- `whoami` — Інформація про користувача
+- `time` — Поточний час
+- `matrix` — Увімкнути/вимкнути ефект матриці
+- `neofetch` — Системна інформація
+- `logs` — Останні системні логи
+- `network` — Стан мережі
+
+### AI Агентська Візуалізація
+- ✅ Інтерактивні картки агентів
+- ✅ Детальні описі ролей
+- ✅ Стани агентів (ONLINE, BUSY, LEARNING)
+- ✅ Адаптивна сітка
+
+### Візуальні Ефекти
+- ✅ Matrix rain (цифровий дощ)
+- ✅ Скануючі лінії (scanlines)
+- ✅ Анімовані кути та рамки
+- ✅ Світіння та пульсація
+- ✅ Glitch-ефекти для VICTORIA
+- ✅ System clock в реальному часі
+- ✅ Сповіщення системи
+
+### Операційна Панель
+- ✅ Картки операцій з анімацією
+- ✅ Теги технологій
+- ✅ Індикатори статусу
+- ✅ Інтерактивні описи
+
+### Адаптивний Дизайн
+- ✅ Mobile-friendly layout
+- ✅ Адаптивна сітка
+- ✅ Touch-optimized інтерфейс
+
+---
+
+## 📊 Системні Вимоги
+
+### Підтримка Браузерів
+- ✅ Chrome/Edge
+- ✅ Firefox
+- ✅ Safari
+- ✅ Opera
+
+### Мінімальні Вимови
+- HTML5-сумісний браузер
+- CSS3 підтримка
+- JavaScript увімкнено
+- Рекомендована роздільна здатність: 1024x768
+
+---
+
+## 🔐 Безпека
+
+- **Шифрування:** AES-256-GCM
+- **Автентифікація:** Багаторівнева безпека
+- **Протокол:** Захищені канали комунікації
+- **Конфіденційність:** Збір даних відсутній
+
+> **Примітка:** Це демонстраційний проєкт. Реальні імплементації безпеки вимагають додаткового загартування для продакшн-використання.
+
+---
+
+## 🌐 Деплоймент
 
 ### GitHub Pages
 
-1. **Push to GitHub:**
+1. **Пуш на GitHub:**
    ```bash
    git add .
    git commit -m "Initial commit"
    git push origin main
    ```
 
-2. **Enable GitHub Pages:**
-   - Go to repository Settings
+2. **Увімкнути GitHub Pages:**
+   - Перейдіть до Settings репозиторію
    - Navigate to Pages
    - Source: Deploy from branch
    - Branch: main / root
-   - Save
+   - Зберегти
 
-3. **Access site:**
+3. **Доступ до сайту:**
    ```
    https://redrock453.github.io/BAS-SUPERGROK/
    ```
@@ -134,9 +236,9 @@ BAS-SUPERGROK/
 ### Netlify
 
 1. **Drag and drop:**
-   - Drag the entire BAS-SUPERGROK folder to Netlify dropzone
+   - Перетягніть папку BAS-SUPERGROK до Netlify dropzone
 
-2. **Or CLI deployment:**
+2. **Або CLI деплоймент:**
    ```bash
    npm install -g netlify-cli
    netlify deploy --prod
@@ -144,127 +246,79 @@ BAS-SUPERGROK/
 
 ---
 
-## 🎨 Features
+## 📞 Контакти
 
-### Terminal Interface
-- Realistic terminal-style UI
-- Animated typing effects
-- Glowing text effects
-- Status indicators
-
-### AI Agent Display
-- Interactive agent cards
-- Detailed role descriptions
-- Responsive grid layout
-
-### Operations Dashboard
-- Live statistics display
-- Performance metrics
-- Operation status monitoring
-
-### Responsive Design
-- Mobile-friendly layout
-- Adaptive grid system
-- Touch-optimized interface
+- **GitHub:** [@Redrock453](https://github.com/Redrock453)
+- **PGP & Signal:** ЗА ЗАПИТОМ (зв'язок через довірені канали)
 
 ---
 
-## 📊 System Requirements
+## 🤝 Внесок
 
-### Browser Support
-- Chrome/Edge: ✅ Full support
-- Firefox: ✅ Full support
-- Safari: ✅ Full support
-- Opera: ✅ Full support
+Це портфоліо/демо проєкт, але пропозиції та покращення вітаються!
 
-### Minimum Requirements
-- HTML5 compatible browser
-- CSS3 support
-- JavaScript enabled
-- 1024x768 resolution (recommended)
+1. Fork репозиторію
+2. Створіть feature branch
+3. Внесіть зміни
+4. Створіть pull request
 
 ---
 
-## 🔐 Security
+## 📝 Ліцензія
 
-- **Encryption:** AES-256-GCM
-- **Authentication:** Multi-layer security
-- **Protocol:** Secure communication channels
-- **Privacy:** No data collection
-
-**Note:** This is a demo project. Actual security implementations would require additional hardening for production use.
+Цей проєкт ліцензований під Apache License 2.0 — дивіться файл [LICENSE](LICENSE) для деталей.
 
 ---
 
-## 📞 Contact
+## ⚖️ Відмова від відповідальності
 
-**GitHub:** [@Redrock453](https://github.com/Redrock453)
+**ЦЕ ДЕМО/ПОРТФОЛІО ПРОЄКТ**
 
----
+Цей проєкт призначений виключно для демонстраційних та портфоліо цілей. Він **НЕ** призначений для реального бойового використання або деплою в реальних тактичних ситуаціях. Автори та контриб'ютори не несуть відповідальності за будь-яке використання цього коду.
 
-## 🤝 Contributing
-
-This is a portfolio/demo project, but suggestions and improvements are welcome!
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+**Для реальних тактичних/оборонних застосувань використовуйте перевірені системи:**
+- [Meshtastic](https://meshtastic.org)
+- [ATAK/CivTAK](https://atak.gov)
+- [Reticulum](https://reticulum.network)
 
 ---
 
-## 📝 License
+## 🙏 Подяки
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
----
-
-## ⚖️ Disclaimer
-
-**THIS IS A DEMO/PORTFOLIO PROJECT**
-
-This project is intended for demonstration and portfolio purposes only. It is **NOT** designed for actual combat use or deployment in real-world tactical situations. The authors and contributors are not responsible for any misuse of this code.
-
-**For actual tactical/defense applications, use proven, tested systems like:**
-- Meshtastic (https://meshtastic.org)
-- ATAK/CivTAK (https://atak.gov)
-- Reticulum (https://reticulum.network)
+- Натхненний сучасними мультиагентними AI-системами
+- Дизайн термінального інтерфейсу з різних CLI-інструментів
+- Тактичні концепти комунікації з open-source проєктів
 
 ---
 
-## 🙏 Acknowledgments
+## 📈 Дорожня Карта
 
-- Inspired by modern multi-agent AI systems
-- Terminal interface design from various CLI tools
-- Tactical communication concepts from open-source projects
+### Поточна Версія: 5.0.0
+- ✅ Мультиагентна архітектура
+- ✅ Термінальний інтерфейс
+- ✅ Операційна панель
+- ✅ Адаптивний дизайн
+- ✅ Matrix rain ефект
+- ✅ Інтерактивні команди
+- ✅ Agent status visualization
 
----
-
-## 📈 Roadmap
-
-### Current Version: 3.5.0
-- ✅ Multi-agent architecture
-- ✅ Terminal interface
-- ✅ Operations dashboard
-- ✅ Responsive design
-
-### Future Enhancements
-- [ ] Interactive agent chat interface
-- [ ] Real-time agent communication visualization
-- [ ] Mobile app version
-- [ ] Backend API integration
-- [ ] WebSocket support for live updates
+### Майбутні Покращення
+- [ ] Інтерактивний чат з агентами
+- [ ] Real-time візуалізація комунікації агентів
+- [ ] Мобільний додаток
+- [ ] Backend API інтеграція
+- [ ] WebSocket для live оновлень
 
 ---
 
-## 🔗 Related Projects
+## 🔗 Пов'язані Проєкти
 
-- [TacticalMesh](https://github.com/Redrock453/TacticalMesh) - Decentralized tactical mesh network implementation
-- [Meshtastic](https://github.com/meshtastic) - Open-source mesh network project
-- [ATAK](https://github.com/AndroidTAK/atak) - Android Team Awareness Kit
+- [TacticalMesh](https://github.com/Redrock453/TacticalMesh) — Децентралізована тактична mesh-мережа
+- [Meshtastic](https://github.com/meshtastic) — Open-source mesh network проєкт
+- [ATAK](https://github.com/AndroidTAK/atak) — Android Team Awareness Kit
 
 ---
 
-**© 2026 БАС - SUPERGROK TACTICAL SYSTEMS ARCHITECT**
+**© 2026 БАС - HYBRID TACTICAL OPERATIONS CENTER v5.0**
 
-*Demo/Portfolio Project - Not for Combat Use*
+*Демо/Портфоліо Проєкт - Не для Бойового Використання*
