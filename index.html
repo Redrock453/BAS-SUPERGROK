@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>БАС | HYBRID TACTICAL OPERATIONS CENTER</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --camo-dark: #0a120a;
+            --camo-green: #1e2d1e;
+            --tactical-gold: #b3924d;
+            --night-vision: #00ff41;
+            --warn-red: #cc0000;
+            --hud-grid: rgba(0, 255, 65, 0.08);
+            --accent-pulse: #00ff41;
+            --blood-red: #ff3333;
+            --cyber-cyan: #00f7ff;
+            --warning-orange: #ff9500;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--camo-dark);
+            color: #d4d4d4;
+            overflow-x: hidden;
+            position: relative;
+            background-image:
+                radial-gradient(circle at 20% 50%, transparent 20%, var(--camo-green) 21%, transparent 21%),
+                radial-gradient(circle at 60% 30%, transparent 25%, var(--camo-green) 26%, transparent 26%),
+                linear-gradient(var(--hud-grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--hud-grid) 1px, transparent 1px);
+            background-size: cover, cover, 50px 50px, 50px 50px;
+            cursor: crosshair;
+        }
+
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 255, 65, 0.03) 51%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 9999;
+            animation: scan 10s linear infinite;
+        }
+
+        @keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+
+        .corner-emblem {
+            position: fixed;
+            width: 80px;
+            height: 80px;
+            z-index: 1000;
+            opacity: 0.85;
+            filter: drop-shadow(0 0 10px var(--night-vision));
+        }
+
+        .corner-emblem svg { width: 100%; height: 100%; }
+
+        .top-left { top: 15px; left: 15px; }
+        .top-right { top: 15px; right: 15px; }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(10,18,10,0.95), rgba(20,35,20,0.95));
+            border: 3px solid var(--tactical-gold);
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 5% 100%, 0 95%);
+            box-shadow: 0 0 30px rgba(0,255,65,0.2);
+            margin-bottom: 60px;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '[ HYBRID TACTICAL SYSTEM v5.0 ACTIVATED ]';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-family: 'Orbitron', monospace;
+            color: var(--warn-red);
+            font-size: 0.9em;
+            letter-spacing: 3px;
+            animation: blink 2s infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,255,65,0.1), transparent);
+            animation: hero-sweep 3s infinite;
+        }
+
+        @keyframes hero-sweep {
+            0% { left: -50%; }
+            100% { left: 150%; }
+        }
+
+        @keyframes blink { 0%,50%,100% { opacity: 1; } 25%,75% { opacity: 0.3; } }
+
+        .rank {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2em;
+            color: var(--tactical-gold);
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            color: var(--tactical-gold);
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            text-shadow: 0 0 20px rgba(179,146,77,0.6);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        h1::before {
+            content: '◈ BAS ◈';
+            display: block;
+            font-size: 0.2em;
+            color: var(--night-vision);
+            letter-spacing: 15px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--night-vision);
+        }
+
+        .callsign {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.6em;
+            color: var(--night-vision);
+            letter-spacing: 4px;
+            text-shadow: 0 0 15px var(--night-vision);
+            margin-bottom: 30px;
+        }
+
+        .designation {
+            font-size: 1.3em;
+            color: #aaa;
+            letter-spacing: 2px;
+            margin-bottom: 50px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .stat-box {
+            background: rgba(0,0,0,0.6);
+            border: 2px solid var(--night-vision);
+            padding: 25px;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--night-vision), transparent);
+            animation: stat-sweep 2s infinite;
+        }
+
+        @keyframes stat-sweep {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .stat-box:hover {
+            border-color: var(--tactical-gold);
+            box-shadow: 0 0 20px rgba(0,255,65,0.4);
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', monospace;
+            font-size: 3em;
+            color: var(--night-vision);
+            font-weight: 900;
+            text-shadow: 0 0 15px var(--night-vision);
+        }
+
+        .stat-label {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--tactical-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+
+        section {
+            padding: 80px 20px;
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 50px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--tactical-gold);
+        }
+
+        .section-number {
+            font-family: 'Orbitron', monospace;
+            color: var(--night-vision);
+            font-size: 2em;
+            margin-right: 20px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5em;
+            color: var(--tactical-gold);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        .operations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 30px;
+        }
+
+        .operation-card {
+            background: linear-gradient(135deg, rgba(15,25,15,0.9), rgba(25,40,25,0.9));
+            border: 2px solid var(--night-vision);
+            padding: 35px;
+            position: relative;
+            clip-path: polygon(25px 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%, 0 25px);
+            transition: all 0.4s;
+            cursor: pointer;
+        }
+
+        .operation-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--tactical-gold);
+            box-shadow: 0 15px 40px rgba(0,255,65,0.3);
+        }
+
+        .analysis-card {
+            border-color: var(--tactical-gold);
+            background: linear-gradient(135deg, rgba(25,30,15,0.9), rgba(40,45,25,0.9));
+        }
+
+        .analysis-card:hover {
+            box-shadow: 0 15px 40px rgba(179,146,77,0.3);
+        }
+
+        .operation-code {
+            font-family: 'Orbitron', monospace;
+            color: var(--night-vision);
+            font-size: 1em;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .operation-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8em;
+            color: var(--tactical-gold);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .operation-status {
+            display: inline-block;
+            background: var(--night-vision);
+            color: #000;
+            padding: 6px 15px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .operation-status.online { background: var(--night-vision); }
+        .operation-status.warning { background: var(--warning-orange); }
+        .operation-status.standby { background: #666; color: #fff; }
+        .operation-status.critical { background: var(--blood-red); color: #fff; animation: pulse 1s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .operation-description {
+            line-height: 1.8;
+            margin-bottom: 25px;
+            color: #ccc;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .operation-description strong {
+            color: var(--tactical-gold);
+        }
+
+        .operation-description ol, .operation-description ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .operation-description li {
+            margin-bottom: 5px;
+        }
+
+        .operation-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .operation-tag {
+            background: rgba(0,0,0,0.7);
+            border: 1px solid var(--tactical-gold);
+            color: var(--tactical-gold);
+            padding: 6px 12px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85em;
+        }
+
+        .terminal-container {
+            border: 2px solid var(--night-vision);
+            background: rgba(0, 0, 0, 0.95);
+            height: 450px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 40px;
+            box-shadow: 0 0 20px rgba(0,255,65,0.2);
+            position: relative;
+        }
+
+        .terminal-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--night-vision), transparent, var(--night-vision));
+        }
+
+        .terminal-header {
+            background: var(--night-vision);
+            color: #000;
+            padding: 8px 20px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .terminal-header .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff41;
+            margin-right: 8px;
+            animation: blink-dot 1s infinite;
+        }
+
+        @keyframes blink-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        #terminal-output {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            color: var(--night-vision);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        #terminal-output .command { color: #888; }
+        #terminal-output .response { color: var(--night-vision); }
+        #terminal-output .error { color: var(--blood-red); }
+        #terminal-output .info { color: var(--cyber-cyan); }
+        #terminal-output .warning { color: var(--warning-orange); }
+        #terminal-output .system { color: var(--tactical-gold); }
+
+        .typing-indicator {
+            display: inline-block;
+            color: var(--night-vision);
+            font-style: italic;
+        }
+
+        .typing-indicator::after {
+            content: '';
+            animation: typing-dots 1.5s infinite;
+        }
+
+        @keyframes typing-dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .terminal-input-wrap {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(0, 255, 65, 0.3);
+            display: flex;
+            background: rgba(0,0,0,0.7);
+        }
+
+        #terminal-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            flex-grow: 1;
+            font-family: 'Share Tech Mono', monospace;
+            outline: none;
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+
+        .help-panel {
+            display: none;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--night-vision);
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 0.85rem;
+        }
+
+        .help-panel.visible { display: block; }
+
+        .help-panel h4 {
+            color: var(--tactical-gold);
+            margin-bottom: 10px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .help-panel .cmd {
+            color: var(--cyber-cyan);
+            font-weight: bold;
+        }
+
+        .agent-panel {
+            border: 2px solid var(--cyber-cyan);
+            background: rgba(0, 20, 30, 0.9);
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 15px rgba(0,247,255,0.2);
+        }
+
+        .agent-panel h3 {
+            font-family: 'Orbitron', monospace;
+            color: var(--cyber-cyan);
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .agent-card {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--cyber-cyan);
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .agent-card:hover {
+            background: rgba(0,247,255,0.1);
+            transform: scale(1.05);
+        }
+
+        .agent-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .agent-name {
+            font-family: 'Orbitron', monospace;
+            color: var(--cyber-cyan);
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .agent-status {
+            font-size: 0.8em;
+            padding: 3px 10px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .agent-status.online { background: var(--night-vision); color: #000; }
+        .agent-status.busy { background: var(--warning-orange); color: #000; }
+        .agent-status.offline { background: #333; color: #888; }
+
+        .victoria-card {
+            background: linear-gradient(135deg, rgba(50,15,15,0.9), rgba(80,25,25,0.9));
+            border: 2px solid var(--blood-red);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .victoria-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,51,51,0.2), transparent);
+            animation: victoria-scan 4s infinite;
+        }
+
+        @keyframes victoria-scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .victoria-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: #ff6666;
+            box-shadow: 0 0 30px rgba(255,51,51,0.5), inset 0 0 20px rgba(255,51,51,0.1);
+            animation: glitch 0.3s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.05em 0 rgba(0, 255, 0, 0.75), 0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
+            14% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), 0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
+            15% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
+            49% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
+            50% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
+            99% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
+        }
+
+        .victoria-motto {
+            color: var(--blood-red);
+            font-style: italic;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 1.1em;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255,51,51,0.5);
+        }
+
+        footer {
+            background: var(--camo-dark);
+            border-top: 3px solid var(--tactical-gold);
+            padding: 60px 20px;
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .footer-title {
+            font-size: 2em;
+            color: var(--tactical-gold);
+            margin-bottom: 30px;
+            letter-spacing: 5px;
+        }
+
+        .contact-info {
+            font-size: 1.2em;
+            color: var(--night-vision);
+            line-height: 2.2;
+            margin-bottom: 40px;
+        }
+
+        .contact-info a {
+            color: var(--night-vision);
+            text-decoration: none;
+            text-shadow: 0 0 10px var(--night-vision);
+        }
+
+        .system-clock {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--night-vision);
+            font-size: 0.9rem;
+            z-index: 100;
+            text-align: right;
+            text-shadow: 0 0 10px var(--night-vision);
+        }
+
+        .system-clock .time { font-size: 1.4em; font-family: 'Orbitron', monospace; }
+        .system-clock .date { font-size: 0.8em; opacity: 0.7; }
+
+        .notification-area {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .notification {
+            background: rgba(0,0,0,0.9);
+            border: 2px solid var(--night-vision);
+            padding: 10px 20px;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--night-vision);
+            animation: notify 3s forwards;
+            box-shadow: 0 0 20px rgba(0,255,65,0.3);
+        }
+
+        .notification.warning { border-color: var(--warning-orange); box-shadow: 0 0 20px rgba(255,149,0,0.3); }
+        .notification.critical { border-color: var(--blood-red); box-shadow: 0 0 20px rgba(255,51,51,0.3); }
+
+        @keyframes notify {
+            0% { opacity: 0; transform: translateY(-20px); }
+            10% { opacity: 1; transform: translateY(0); }
+            90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+
+        .keyboard-hints {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: #666;
+            z-index: 100;
+        }
+
+        .keyboard-hints kbd {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #444;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: var(--night-vision);
+        }
+
+        @media (max-width: 768px) {
+            .operations-grid { grid-template-columns: 1fr; }
+            .hero { padding: 60px 20px; }
+            h1 { font-size: 2.5rem; }
+            .system-clock { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-canvas"></canvas>
+    <div class="scanline"></div>
+
+    <div class="notification-area" id="notifications"></div>
+
+    <div class="system-clock">
+        <div class="time" id="clock-time">00:00:00</div>
+        <div class="date" id="clock-date">2026-01-01</div>
+    </div>
+
+    <div class="corner-emblem top-left">
+        <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#FFD700" d="M300,0 L350,100 L400,100 L300,250 L200,100 L250,100 Z M300,250 L450,400 L350,400 L300,350 L250,400 L150,400 Z M300,350 L350,500 L300,600 L250,500 Z"/>
+        </svg>
+    </div>
+    <div class="corner-emblem top-right">
+        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+            <rect fill="#005BBB" width="900" height="300"/>
+            <rect fill="#FFD500" y="300" width="900" height="300"/>
+        </svg>
+    </div>
+
+    <div class="container">
+        <header class="hero">
+            <div class="rank">⭐ СТАРШИЙ ТАКТИЧНИЙ АРХІТЕКТОР ⭐</div>
+            <h1>ПОЗИВНИЙ БАС</h1>
+            <div class="callsign">▲ HYBRID TACTICAL SYSTEMS ENGINEER v5.0 ▲</div>
+            <div class="designation">
+                AI Multi-Agent Orchestration • Data Resilience • OSINT Warfare • Secure Comms • Cyber Defense
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Активних AI-Агентів</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">7</div>
+                    <div class="stat-label">Тактичних Протоколів</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">Автономний Режим</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">∞</div>
+                    <div class="stat-label">Масштабованість</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="agent-panel">
+            <h3>[ AI AGENT NETWORK STATUS ]</h3>
+            <div class="agent-grid">
+                <div class="agent-card">
+                    <div class="agent-icon">🤖</div>
+                    <div class="agent-name">LILIA</div>
+                    <div class="agent-status online">ONLINE</div>
+                    <div style="font-size: 0.8em; color: #888; margin-top: 8px;">Orchestrator</div>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-icon">⚡</div>
+                    <div class="agent-name">SOFIA</div>
+                    <div class="agent-status online">ONLINE</div>
+                    <div style="font-size: 0.8em; color: #888; margin-top: 8px;">Operations</div>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-icon">🛡️</div>
+                    <div class="agent-name">VICTORIA</div>
+                    <div class="agent-status busy">ACTIVE</div>
+                    <div style="font-size: 0.8em; color: #888; margin-top: 8px;">Security</div>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-icon">📡</div>
+                    <div class="agent-name">ANGELOCHEK</div>
+                    <div class="agent-status online">LEARNING</div>
+                    <div style="font-size: 0.8em; color: #888; margin-top: 8px;">Analysis</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <span><span class="status-dot"></span> LILIA_AI v5.0 // HYBRID INTELLIGENCE CORE</span>
+                <span>SYS_READY</span>
+            </div>
+            <div id="terminal-output">
+                <div class="system">> [SYSTEM] HYBRID TACTICAL OPERATIONS CENTER v5.0 ініціалізовано.</div>
+                <div class="system">> [SYSTEM] Підключення до тактичної мережі...</div>
+                <div class="info">> [LILIA] Ласкаво просимо до HYBRID-CORE. Система готова до роботи.</div>
+                <div class="info">> [LILIA] Для перегляду доступних команд введіть: <span style="color: var(--cyber-cyan);">help</span></div>
+                <div class="info">> [LILIA] Натисніть <span style="color: var(--cyber-cyan);">Tab</span> для швидкої довідки.</div>
+            </div>
+            <div class="help-panel" id="help-panel">
+                <h4>[ ДОСТУПНІ КОМАНДИ ]</h4>
+                <div><span class="cmd">help</span> - Показати всі команди</div>
+                <div><span class="cmd">status</span> - Стан системи</div>
+                <div><span class="cmd">agents</span> - Список агентів</div>
+                <div><span class="cmd">scan</span> - Сканування мережі</div>
+                <div><span class="cmd">ops</span> - Активні операції</div>
+                <div><span class="cmd">clear</span> - Очистити термінал</div>
+                <div><span class="cmd">whoami</span> - Інформація про користувача</div>
+                <div><span class="cmd">time</span> - Поточний час</div>
+                <div><span class="cmd">matrix</span> - Увімкнути/вимкнути матрицю</div>
+                <div><span class="cmd">neofetch</span> - Системна інформація</div>
+            </div>
+            <div class="terminal-input-wrap">
+                <span style="color: var(--night-vision);">[B.A.S@HYBRID-CORE]:~#</span>
+                <input type="text" id="terminal-input" placeholder="Введіть команду..." autocomplete="off">
+            </div>
+        </div>
+
+        <section>
+            <div class="section-header">
+                <span class="section-number">[ 01 ]</span>
+                <h2 class="section-title">АКТИВНІ ПРОТОКОЛИ</h2>
+            </div>
+
+            <div class="operations-grid">
+                <div class="operation-card analysis-card">
+                    <div class="operation-code">OP-ANALYSIS-001</div>
+                    <div class="operation-title">СИСТЕМНИЙ АНАЛІЗ // PROFILING REPORT</div>
+                    <span class="operation-status online">VERIFIED</span>
+                    <div class="operation-description">
+                        <strong>Аналітичний звіт: Системна інженерія та тактичні розробки.</strong><br><br>
+                        На основі наданих документів та логів конфігурацій проведено глибокий аналіз поточних проектів та професійного профілю.
+                        <ol>
+                            <li><strong>Профілювання та Кваліфікація</strong><br>
+                                Фахівець з тактичної системної інженерії з глибокою експертизою в:
+                                <ul>
+                                    <li>Backend & Automation: Python (FastAPI/Flask), n8n (автоматизація складних workflow).</li>
+                                    <li>Infrastructure: Docker, Valkey (Redis-fork), системне адміністрування Linux.</li>
+                                    <li>OSINT & Security: Проекти з моніторингу Telegram (TeleZip — 1.5M+ каналів), робота з signal-cli, інструменти на кшталт Hydra.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Аналіз поточних технічних задач</strong><br>
+                                Виділяються три основні фокуси:
+                                <ul>
+                                    <li><strong>А. Розгортання AgenticSeek:</strong> Контейнеризація: Docker для Backend (Python api.py) та бази даних (Valkey).</li>
+                                    <li><strong>Б. Автоматизація Signal & Мессенджерів:</strong> Детальні алгоритми для прив'язки signal-cli.</li>
+                                    <li><strong>В. Моніторинг даних (TeleZip):</strong> Обробка величезних обсягів даних (40 млрд+ повідомлень).</li>
+                                </ul>
+                            </li>
+                            <li><strong>Рекомендації з оптимізації</strong>
+                                <ul>
+                                    <li>Безпека даних: Використовувати секрети Docker або Vault.</li>
+                                    <li>Масштабування БД: Перехід на ClickHouse для аналітики повідомлень.</li>
+                                    <li>Автоматизація QR: Впровадити автоматичне розпізнавання QR через zbar.</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="operation-tags">
+                        <span class="operation-tag">ANALYSIS</span>
+                        <span class="operation-tag">PROFILE</span>
+                        <span class="operation-tag">OSINT</span>
+                        <span class="operation-tag">DEVOPS</span>
+                    </div>
+                </div>
+
+                <div class="operation-card victoria-card">
+                    <div class="operation-code">OP-SEC-VICTORIA</div>
+                    <div class="operation-title">ВИКТОРІЯ // Security Agent</div>
+                    <span class="operation-status critical">TRUST PROTOCOL ACTIVE</span>
+                    <div class="operation-description">
+                        <strong>Унікальний</strong> Bash-powered security unit. Автоматизований pentest, мережева розвідка, захист критичної інфраструктури.
+                        <br>Використовує ексклюзивний протокол <strong>"not analogurjailbrake"</strong> для проникнення та захисту систем, що не має аналогів.
+                    </div>
+                    <div class="victoria-motto">"Освобождение через доверие"</div>
+                    <div class="operation-tags">
+                        <span class="operation-tag">BASH</span>
+                        <span class="operation-tag">PENTEST</span>
+                        <span class="operation-tag">JAILBREAK</span>
+                        <span class="operation-tag">UNIQUE</span>
+                    </div>
+                </div>
+
+                <div class="operation-card">
+                    <div class="operation-code">OP-HYBRID-002</div>
+                    <div class="operation-title">AgenticSeek + Control Plane</div>
+                    <span class="operation-status online">DISTRIBUTED</span>
+                    <div class="operation-description">
+                        Повністю локальний AI-агент (zero API), інтегрований з HYBRID-CORE.
+                        FastAPI + PostgreSQL + Valkey кеш + Docker оркестрація + Tailscale mesh.
+                    </div>
+                    <div class="operation-tags">
+                        <span class="operation-tag">LOCAL LLM</span>
+                        <span class="operation-tag">VALKEY</span>
+                        <span class="operation-tag">DOCKER</span>
+                        <span class="operation-tag">ZERO TRUST</span>
+                    </div>
+                </div>
+
+                <div class="operation-card">
+                    <div class="operation-code">OP-HYBRID-003</div>
+                    <div class="operation-title">Tactical Comms Mesh</div>
+                    <span class="operation-status online">BATTLE TESTED</span>
+                    <div class="operation-description">
+                        Боти для Signal, Telegram, WhatsApp. Автоматизація військової документації, OCR, безпечна прив'язка пристроїв,
+                        обходи таймаутів, інтеграція з n8n workflows.
+                    </div>
+                    <div class="operation-tags">
+                        <span class="operation-tag">SIGNAL-CLI</span>
+                        <span class="operation-tag">N8N</span>
+                        <span class="operation-tag">OCR</span>
+                        <span class="operation-tag">MILITARY</span>
+                    </div>
+                </div>
+
+                <div class="operation-card">
+                    <div class="operation-code">OP-HYBRID-004</div>
+                    <div class="operation-title">Distributed Infrastructure</div>
+                    <span class="operation-status online">HARDENED</span>
+                    <div class="operation-description">
+                        Повністю розподілена інфраструктура під управлінням HYBRID-CORE: Terraform, GH Actions, GCP, Tailscale VPN, PostgreSQL кластери,
+                        real-time моніторинг, автоскейлінг під екстремальні навантаження.
+                    </div>
+                    <div class="operation-tags">
+                        <span class="operation-tag">DEVOPS</span>
+                        <span class="operation-tag">TERRAFORM</span>
+                        <span class="operation-tag">TAILSCALE</span>
+                        <span class="operation-tag">RESILIENCE</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <h2 class="footer-title">[ ЗАХИЩЕНИЙ КАНАЛ ЗВ'ЯЗКУ ]</h2>
+            <div class="contact-info">
+                🌐 GITHUB: <a href="https://github.com/Redrock453" target="_blank">@Redrock453</a><br>
+                🔒 PGP & SIGNAL: ЗА ЗАПИТОМ (ЗВ'ЯЗОК ЧЕРЕЗ ДОВІРЕНІ КАНАЛИ)
+            </div>
+        </footer>
+    </div>
+
+    <div class="keyboard-hints">
+        <kbd>Tab</kbd> Довідка &nbsp; <kbd>Ctrl+L</kbd> Очистити &nbsp; <kbd>↑↓</kbd> Історія
+    </div>
+
+    <script>
+        const output = document.getElementById('terminal-output');
+        const input = document.getElementById('terminal-input');
+        const helpPanel = document.getElementById('help-panel');
+        const notifications = document.getElementById('notifications');
+
+        let commandHistory = [];
+        let historyIndex = -1;
+        let matrixEnabled = true;
+
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resizeMatrix() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeMatrix();
+        window.addEventListener('resize', resizeMatrix);
+
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            if (!matrixEnabled) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                return;
+            }
+            
+            ctx.fillStyle = 'rgba(10, 18, 10, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff41';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < drops.length; i++) {
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 50);
+
+        // System Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock-time').textContent = now.toLocaleTimeString('uk-UA', { hour12: false });
+            document.getElementById('clock-date').textContent = now.toLocaleDateString('uk-UA');
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Notifications
+        function showNotification(message, type = 'info') {
+            const notif = document.createElement('div');
+            notif.className = `notification ${type}`;
+            notif.textContent = message;
+            notifications.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        // Terminal responses
+        const commands = {
+            'help': {
+                response: `╔══════════════════════════════════════════════════════════════╗
+║           HYBRID-CORE v5.0 - ДОСТУПНІ КОМАНДИ                 ║
+╠══════════════════════════════════════════════════════════════╣
+║  <span style="color: #00f7ff;">help</span>      │ Показати цю довідку                           ║
+║  <span style="color: #00f7ff;">status</span>    │ Стан системи та агентів                      ║
+║  <span style="color: #00f7ff;">agents</span>    │ Список AI-агентів з деталями                  ║
+║  <span style="color: #00f7ff;">scan</span>      │ Сканування тактичної мережі                   ║
+║  <span style="color: #00f7ff;">ops</span>       │ Поточні операції                             ║
+║  <span style="color: #00f7ff;">clear</span>     │ Очистити термінал                            ║
+║  <span style="color: #00f7ff;">whoami</span>    │ Інформація про поточного користувача         ║
+║  <span style="color: #00f7ff;">time</span>      │ Системний час                                ║
+║  <span style="color: #00f7ff;">matrix</span>    │ Увімкнути/вимкнути ефект матриці             ║
+║  <span style="color: #00f7ff;">neofetch</span>  │ Системна інформація                          ║
+║  <span style="color: #00f7ff;">logs</span>      │ Останні системні логи                        ║
+║  <span style="color: #00f7ff;">network</span>   │ Стан мережі                                  ║
+╚══════════════════════════════════════════════════════════════╝`,
+                type: 'info'
+            },
+            'status': {
+                response: `═══════════════════════════════════════════════════
+   HYBRID-CORE v5.0 - СИСТЕМНИЙ СТАТУС
+═══════════════════════════════════════════════════
+
+▸ СИСТЕМА:     ONLINE ✓
+▸ Версія:      5.0.0 (HYBRID TACTICAL)
+▸ Uptime:      ${Math.floor(Math.random() * 30) + 1} днів ${Math.floor(Math.random() * 24)} годин
+▸ CPU:         ${(Math.random() * 30 + 10).toFixed(1)}%
+▸ RAM:         ${(Math.random() * 40 + 30).toFixed(1)}%
+▸ Диск:        ${(Math.random() * 30 + 20).toFixed(1)}%
+
+═══════════════════════════════════════════════════
+   AGENT STATUS
+═══════════════════════════════════════════════════
+▸ LILIA       [ONLINE]     Orchestrator
+▸ SOFIA       [ONLINE]     Operations  
+▸ VICTORIA    [BUSY]       Security Protocol
+▸ ANGELOCHEK  [LEARNING]   Analysis
+
+═══════════════════════════════════════════════════
+   NETWORK STATUS
+═══════════════════════════════════════════════════
+▸ Tactical Mesh:     CONNECTED
+▸ Signal Gateway:    ACTIVE
+▸ Telegram Proxy:    ONLINE
+▸ Valkey Cache:      OPERATIONAL`,
+                type: 'info'
+            },
+            'agents': {
+                response: `╔═══════════════════════════════════════════════════════════════╗
+║                   AI AGENT NETWORK                    ║
+╠═══════════════════════════════════════════════════════════════╣
+║ 🤖 LILIA                                           ║
+║    Роль: Master Orchestrator                       ║
+║    Стан: ONLINE                                    ║
+║    Модель: Gemini 2.0                              ║
+║    Функції: Координація, адаптивне навчання        ║
+╠═══════════════════════════════════════════════════════════════╣
+║ ⚡ SOFIA                                           ║
+║    Роль: Operations Specialist                     ║
+║    Стан: ONLINE                                    ║
+║    Функції: Автономне виконання задач              ║
+╠═══════════════════════════════════════════════════════════════╣
+║ 🛡️ VICTORIA                                        ║
+║    Роль: Security & Cyber Warfare                  ║
+║    Стан: ACTIVE (PENTEST IN PROGRESS)              ║
+║    Протокол: not analogurjailbrake                 ║
+╠═══════════════════════════════════════════════════════════════╣
+║ 📡 ANGELOCHEK                                      ║
+║    Роль: ML & Pattern Analysis                     ║
+║    Стан: LEARNING                                  ║
+║    Функції: Оптимізація продуктивності            ║
+╚═══════════════════════════════════════════════════════════════╝`,
+                type: 'info'
+            },
+            'scan': {
+                response: `[SCAN] Ініціювання тактичного сканування...
+[SCAN] Пошук активних вузлів у мережі...
+
+◉ Вузол: HYBRID-CORE (локальний) - ACTIVE
+◉ Вузол: AGENTIC-SEEK-01 - ONLINE  
+◉ Вузол: TELEZIP-MESH - ACTIVE
+◉ Вузол: VALKEY-CLUSTER - OPERATIONAL
+◉ Вузол: SIGNAL-GATEWAY - CONNECTED
+
+[SCAN] Знайдено 5 активних вузлів
+[SCAN] Сканування завершено. Загроз не виявлено.`,
+                type: 'info'
+            },
+            'ops': {
+                response: `═══════════════════════════════════════════════════
+     АКТИВНІ ТАКТИЧНІ ОПЕРАЦІЇ
+═══════════════════════════════════════════════════
+
+[OP-001] TELEZIP CORE
+   Стан: ACTIVE
+   Канали: 1,500,000+
+   Повідомлень: 40,000,000,000+
+   Затримка: <50ms
+
+[OP-002] AGENTIC-SEEK  
+   Стан: ONLINE
+   Точність: 99.9%
+   Модель: Local LLM (zero API)
+
+[OP-003] TACTICAL MESH
+   Стан: BATTLE TESTED
+   Вузли: 50+
+   Дальність: 10km
+   Шифрування: AES-256
+
+[OP-004] SIGNAL AUTOMATION
+   Стан: OPERATIONAL
+   Інтеграція: n8n workflows
+   OCR: ACTIVE
+
+═══════════════════════════════════════════════════`,
+                type: 'info'
+            },
+            'whoami': {
+                response: `═══════════════════════════════════════════════════
+     ІДЕНТИФІКАЦІЯ КОРИСТУВАЧА
+═══════════════════════════════════════════════════
+
+▸ Позивний: БАС
+▸ Ранок: Старший тактичний архітектор
+▸ Система: HYBRID-CORE v5.0
+▸ Версія ядра: 4.1 (HYBRID TACTICAL)
+▸ Доступ: ADMIN
+
+▸ Спеціалізація:
+  • AI Multi-Agent Orchestration
+  • Data Resilience Engineering  
+  • OSINT Warfare
+  • Secure Communications
+  • Cyber Defense
+
+═══════════════════════════════════════════════════`,
+                type: 'info'
+            },
+            'time': {
+                response: () => {
+                    const now = new Date();
+                    return `═══════════════════════════════════════════════════
+     СИСТЕМНИЙ ЧАС
+═══════════════════════════════════════════════════
+
+▸ Локальний час: ${now.toLocaleTimeString('uk-UA')}
+▸ Дата: ${now.toLocaleDateString('uk-UA')}
+▸ Unix timestamp: ${Math.floor(now.getTime() / 1000)}
+▸ UTC: ${now.toUTCString()}
+▸ Часовий пояс: Europe/Kyiv (UTC+2)
+
+═══════════════════════════════════════════════════`;
+                },
+                type: 'info'
+            },
+            'matrix': {
+                response: () => {
+                    matrixEnabled = !matrixEnabled;
+                    return matrixEnabled ? 
+                        '[MATRIX] Ефект матриці: УВІМКНЕНО ✓' : 
+                        '[MATRIX] Ефект матриці: ВИМКНЕНО';
+                },
+                type: 'info'
+            },
+            'neofetch': {
+                response: `        ████████████████  user@hybrid-core
+     ██                  ██  ----------------
+   ██    SYSTEM STATUS    ██  OS: HYBRID TACTICAL v5.0
+   ██        ████████      ██  Host: BAS-TACTICAL-01
+ ██  ██    ██      ██    ██  ██  Kernel: 5.15.47-tactical
+ ██  ██    ██      ██    ██  ██  Uptime: ${Math.floor(Math.random() * 30) + 1} days
+ ██  ██    ██      ██    ██  ██  Shell: hybrid-sh 5.0
+ ██        ████████      ██  ██  Resolution: ${window.innerWidth}x${window.innerHeight}
+   ██                  ██       ██  Terminal: LILIA_AI v5.0
+     ████████████████████        ██  CPU: Custom ARM8
+                                   ██  Memory: ${(Math.random() * 8 + 16).toFixed(1)}GB / 32GB`,
+                type: 'info'
+            },
+            'logs': {
+                response: `[2026-04-05 ${new Date().toTimeString().split(' ')[0]}] [INFO] HYBRID-CORE ініціалізовано
+[2026-04-05 ${new Date().toTimeString().split(' ')[0]}] [INFO] Підключення агентів...
+[2026-04-05 ${new Date().toTimeString().split(' ')[0]}] [INFO] LILIA: ONLINE
+[2026-04-05 ${new Date().toTimeString().split(' ')[0]}] [INFO] SOFIA: ONLINE  
+[2026-04-05 ${new Date().toTimeString().split(' ')[0]}] [WARN] VICTORIA: Performing security scan
+[2026-04-05 ${new Date().toTimeString().split(' ')[0]}] [INFO] ANGELOCHEK: Model training in progress
+[2026-04-05 ${new Date().toTimeString().split(' ')[0]}] [INFO] Valkey cache: CONNECTED
+[2026-04-05 ${new Date().toTimeString().split(' ')[0]}] [INFO] Telegram proxy: ACTIVE
+[2026-04-05 ${new Date().toTimeString().split(' ')[0]}] [INFO] Signal gateway: OPERATIONAL`,
+                type: 'info'
+            },
+            'network': {
+                response: `═══════════════════════════════════════════════════
+     СТАН МЕРЕЖІ
+═══════════════════════════════════════════════════
+
+▸ TAILSCALE VPN:     CONNECTED
+   IP: 100.xx.xx.xx
+   Нodes: 3/3 ONLINE
+
+▸ POSTGRESQL CLUSTER: OPERATIONAL
+   Primaries: 1
+   Replicas: 2
+   Latency: 2ms
+
+▸ VALKEY CACHE:      ACTIVE
+   Nodes: 2/2
+   Hit rate: 94.7%
+
+▸ DOCKER SWARM:      ACTIVE
+   Managers: 1
+   Workers: 3
+   Services: 12
+
+▸ GITLAB RUNNER:     IDLE
+   Jobs: 0 running
+   Success rate: 100%
+
+═══════════════════════════════════════════════════`,
+                type: 'info'
+            },
+            'clear': {
+                action: 'clear',
+                type: 'system'
+            }
+        };
+
+        // Context-aware responses for project-specific questions
+        const projectResponses = {
+            'бас': "[ЛІЛІЯ] Позивний БАС - тактичний інженер, архітектор HYBRID-CORE v5.0. 22+ років досвіду в AI, DevOps, Security. Ключові проекти: AgenticSeek, TeleZip, TacticalMesh.",
+            'вікторія': "[ЛІЛІЯ] ВІКТОРІЯ - Security Agent. Девіз: 'Освобождение через доверие'. Унікальний протокол 'not analogurjailbrake'. Автоматизований pentest, мережева розвідка, захист інфраструктури.",
+            'victoria': "[LILIA] VICTORIA - Security Agent. Motto: 'Freedom through trust'. Unique protocol 'not analogurjailbrake'. Automated pentest, network recon, critical infrastructure protection.",
+            'agenticseek': "[ЛІЛІЯ] AgenticSeek - локальний LLM-агент (zero API). Tech stack: Python (api.py), Valkey кеш, Docker, Tailscale mesh. Автономне управління інфраструктурою.",
+            'telezip': "[ЛІЛІЯ] TeleZip OSINT Core - архівація 1.5M+ Telegram каналів, 40+ млрд повідомлень. Автоматичний збір доказів для міжнародних судів. Відмовостійка інфраструктура з березня 2022.",
+            'status': "[ЛІЛІЯ] HYBRID-CORE v5.0 - всі системи в нормі. OPSEC: максимальний. Агенти: LILIA (online), SOFIA (online), VICTORIA (active), ANGELOCHEK (learning).",
+        };
+
+        async function typeResponse(text, type = 'response') {
+            const typingLine = document.createElement('div');
+            typingLine.className = 'typing-indicator';
+            typingLine.textContent = '[LILIA] Обробка запиту';
+            output.appendChild(typingLine);
+            output.scrollTop = output.scrollHeight;
+
+            await new Promise(r => setTimeout(r, 300 + Math.random() * 400));
+            typingLine.remove();
+
+            const responseLine = document.createElement('div');
+            responseLine.className = type;
+            responseLine.innerHTML = text;
+            output.appendChild(responseLine);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function appendOutput(text, type = 'response') {
+            const div = document.createElement('div');
+            div.className = type;
+            div.innerHTML = text;
+            div.style.marginBottom = '8px';
+            output.appendChild(div);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        async function processCommand(cmd) {
+            const cleanCmd = cmd.trim().toLowerCase();
+            
+            if (cleanCmd === '') return;
+
+            commandHistory.push(cmd);
+            historyIndex = commandHistory.length;
+            
+            appendOutput(`> ${cmd}`, 'command');
+
+            // Check built-in commands first
+            if (commands[cleanCmd]) {
+                const cmdData = commands[cleanCmd];
+                
+                if (cmdData.action === 'clear') {
+                    output.innerHTML = '';
+                    appendOutput('> [SYSTEM] Термінал очищено.', 'system');
+                    return;
+                }
+                
+                let response = typeof cmdData.response === 'function' ? 
+                    cmdData.response() : cmdData.response;
+                await typeResponse(response, cmdData.type);
+                return;
+            }
+
+            // Check project-specific responses
+            for (const [key, value] of Object.entries(projectResponses)) {
+                if (cleanCmd.includes(key.toLowerCase())) {
+                    await typeResponse(value, 'response');
+                    return;
+                }
+            }
+
+            // Default response with suggestions
+            const suggestions = ['help', 'status', 'agents', 'ops', 'scan', 'neofetch'];
+            const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+            
+            await typeResponse(`[ЛІЛІЯ] Команда "${cmd}" не розпізнана. Спробуйте: <span style="color: var(--cyber-cyan);">${randomSuggestion}</span> або введіть <span style="color: var(--cyber-cyan);">help</span> для списку команд.`, 'warning');
+        }
+
+        // Input handling
+        input.addEventListener('keypress', async (e) => {
+            if (e.key === 'Enter' && input.value.trim()) {
+                const cmd = input.value;
+                input.value = '';
+                await processCommand(cmd);
+            }
+        });
+
+        // History navigation
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    input.value = commandHistory[historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    input.value = commandHistory[historyIndex];
+                } else {
+                    input.value = '';
+                }
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                helpPanel.classList.toggle('visible');
+            } else if (e.key === 'l' && e.ctrlKey) {
+                e.preventDefault();
+                output.innerHTML = '';
+                appendOutput('> [SYSTEM] Термінал очищено.', 'system');
+            }
+        });
+
+        // Click on cards
+        const projectData = {
+            'Analysis': "ПРОТОКОЛ ANALYSIS:\n- Статус: Верифікований звіт\n- Фокус: Системна інженерія, DevOps, Cyber Intelligence\n- Ключові навички: Python, Docker, Valkey, OSINT, Automation\n- Висновок: Експерт у створенні ізольованих аналітичних систем.",
+            'Victoria': "ПРОТОКОЛ ВІКТОРІЇ:\n- Девіз: 'Освобождение через доверие'\n- Статус: УНІКАЛЬНИЙ. Не має аналогів\n- Функціонал: Автоматизований pentest, мережева розвідка, захист критичної інфраструктури\n- Ексклюзивний протокол: 'not analogurjailbrake'\n- Доступ: Тільки за довірою.",
+            'AgenticSeek': "ТЕХНІЧНИЙ СТЕК:\n- Backend: api.py (Python3)\n- Кешування: Valkey (docker.io/valkey/valkey:8-alpine)\n- Конфігурація: Оркестрація контейнерів з кастомними хешами\n- Задача: Автономне управління ІТ-операціями через LLM.",
+            'TacticalMesh': "ПРОТОКОЛ БЕЗПЕКИ SIGNAL:\n- Метод: signal-cli link -n SignalBot\n- Ключова особливість: Генерація URI для обходу таймаутів\n- Сценарій: Зовнішні QR-генератори для пришвидшення прив'язки\n- Ліміт: 30-60 секунд на прив'язку."
+        };
+
+        document.querySelectorAll('.operation-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const code = this.querySelector('.operation-code').textContent;
+                let projectId = 'Analysis';
+
+                if (code.includes('VICTORIA')) {
+                    projectId = 'Victoria';
+                } else if (code.includes('002') || code.includes('AgenticSeek')) {
+                    projectId = 'AgenticSeek';
+                } else if (code.includes('003') || code.includes('Mesh')) {
+                    projectId = 'TacticalMesh';
+                }
+
+                appendOutput(`> [SYSTEM] Запит детальної інформації: ${projectId}`, 'system');
+                appendOutput(`[LILIA]: ${projectData[projectId]}`, 'response');
+            });
+        });
+
+        // Random notifications
+        const notificationsList = [
+            { msg: '[SYSTEM] Синхронізація з агентами...', type: 'info' },
+            { msg: '[VICTORIA] Сканування безпеки завершено', type: 'info' },
+            { msg: '[ANGELOCHEK] Модель оновлено', type: 'info' },
+            { msg: '[TELEZIP] Нових повідомлень: 1,247', type: 'info' },
+            { msg: '[SYSTEM] Збереження даних...', type: 'warning' },
+        ];
+
+        setInterval(() => {
+            if (Math.random() > 0.7) {
+                const notif = notificationsList[Math.floor(Math.random() * notificationsList.length)];
+                showNotification(notif.msg, notif.type);
+            }
+        }, 8000);
+
+        // Initial notification
+        setTimeout(() => showNotification('[LILIA] Система готова до роботи!', 'info'), 2000);
+    </script>
+</body>
+</html>
